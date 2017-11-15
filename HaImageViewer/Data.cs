@@ -12,12 +12,23 @@ namespace HaImageViewer
     public class Data : PropertyNotifierBase
     {
         private ObservableCollection<Category> categories;
-        public ObservableCollection<Category> Categories { get { return categories ?? (categories = new ObservableCollection<Category>()); } }
+        public ObservableCollection<Category> Categories
+        {
+            get { return categories ?? (categories = new ObservableCollection<Category>()); }
+        }
 
         private ImageSource currentImage;
-        public ImageSource CurrentImage {
+        public ImageSource CurrentImage
+        {
             get { return currentImage ?? (currentImage = new BitmapImage()); }
             set { SetField(ref currentImage, value); }
+        }
+
+        private string currentFileName;
+        public string CurrentFileName
+        {
+            get { return currentFileName ?? (currentFileName = ""); }
+            set { SetField(ref currentFileName, value); }
         }
     }
 }

@@ -40,6 +40,9 @@
     <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAPICodePack.Shell.1.1.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
+    <Reference Include="NReco.VideoConverter, Version=1.1.2.0, Culture=neutral, PublicKeyToken=395ccb334978a0cd, processorArchitecture=MSIL">
+      <HintPath>..\packages\NReco.VideoConverter.1.1.2\lib\net20\NReco.VideoConverter.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -62,6 +65,8 @@
     </ApplicationDefinition>
     <Compile Include="Category.cs" />
     <Compile Include="Database.cs" />
+    <Compile Include="FileNameShortConverter.cs" />
+    <Compile Include="FileNameVisibilityConverter.cs" />
     <Compile Include="ImageFile.cs" />
     <Compile Include="PropertyNotifierBase.cs" />
     <Page Include="MainWindow.xaml">

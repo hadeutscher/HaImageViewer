@@ -1,5 +1,7 @@
-﻿using System;
+﻿using NReco.VideoConverter;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -28,6 +30,7 @@ namespace HaImageViewer
         public static RoutedCommand Delete = new RoutedCommand();
 
         private static string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
+        private static string[] videoExtensions = { ".mp4", ".webm", ".wmv", ".m4v", ".flv", ".avi" };
 
         private string folder;
         private IList<string> files;
@@ -35,6 +38,7 @@ namespace HaImageViewer
         private Data data;
         private List<string> filters;
         private bool transitioning = false;
+        private FFMpegConverter ffMpeg = new FFMpegConverter();
 
         static MainWindow()
         {
@@ -68,16 +72,57 @@ namespace HaImageViewer
             }
         }
 
+        public static bool IsImage(string path)
+        {
+            string extension = System.IO.Path.GetExtension(path).ToLower();
+            return imageExtensions.Contains(extension);
+        }
+
+        public static bool IsVideo(string path)
+        {
+            string extension = System.IO.Path.GetExtension(path).ToLower();
+            return videoExtensions.Contains(extension);
+        }
+
         private void SetImage()
         {
             PerhapsSave();
+
+            string file_name = files[i];
+            data.CurrentFileName = file_name;
+
             var bmp = new BitmapImage();
             bmp.BeginInit();
             bmp.CacheOption = BitmapCacheOption.OnLoad;
-            bmp.UriSource = new Uri(files[i]);
-            bmp.EndInit();
+            if (IsImage(file_name))
+            {
+                bmp.UriSource = new Uri(file_name);
+            }
+            else if (IsVideo(file_name))
+            {
+                var stream = new MemoryStream();
+                ffMpeg.GetVideoThumbnail(file_name, stream, 10);
+                stream.Seek(0, SeekOrigin.Begin);
+                if (stream.Length > 0)
+                {
+                    bmp.StreamSource = stream;
+                }
+                else
+                {
+                    bmp = null;
+                }
+            }
+            else
+            {
+                bmp = null;
+            }
+
+            if (bmp != null)
+            {
+                bmp.EndInit();
+            }
             data.CurrentImage = bmp;
-            var fileCategories = Database.Get().GetCategories(files[i]);
+            var fileCategories = Database.Get().GetCategories(file_name);
             transitioning = true;
             foreach (Category cat in data.Categories)
             {
@@ -91,14 +136,19 @@ namespace HaImageViewer
             return filters == null || filters.All(x => fileCategories.Contains(x));
         }
 
+        private DateTime GetFileTime(FileInfo fi)
+        {
+            return (fi.LastWriteTime < fi.CreationTime) ? fi.LastWriteTime : fi.CreationTime;
+        }
+
         private IEnumerable<string> FileInfoIterator()
         {
-            var files = new DirectoryInfo(System.IO.Path.Combine(folder, "New Folder")).GetFiles().Where(x => imageExtensions.Contains(x.Extension.ToLower())).ToList();
+            var files = new DirectoryInfo(System.IO.Path.Combine(folder, "New Folder")).GetFiles().Where(x => imageExtensions.Contains(x.Extension.ToLower()) || videoExtensions.Contains(x.Extension.ToLower())).ToList();
             if (filters != null)
             {
                 files = files.Where(x => CategoriesMatch(Database.Get().GetCategories(x.FullName))).ToList();
             }
-            files.Sort((x, y) => x.CreationTime.CompareTo(y.CreationTime));
+            files.Sort((x, y) => GetFileTime(x).CompareTo(GetFileTime(y)));
             foreach (FileInfo file in files)
             {
                 yield return file.FullName;
@@ -191,7 +241,18 @@ namespace HaImageViewer
                 case Key.NumPad8:
                     TryToggleCategory(7);
                     break;
+                case Key.NumPad9:
+                    TryToggleCategory(8);
+                    break;
+                case Key.NumPad0:
+                    TryToggleCategory(9);
+                    break;
             }
+        }
+
+        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Process.Start(files[i]);
         }
     }
 }

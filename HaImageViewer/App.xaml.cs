@@ -25,8 +25,10 @@ namespace HaImageViewer
             }
             else
             {
-                var dialog = new CommonOpenFileDialog();
-                dialog.IsFolderPicker = true;
+                var dialog = new CommonOpenFileDialog
+                {
+                    IsFolderPicker = true
+                };
                 CommonFileDialogResult result = dialog.ShowDialog();
                 if (result == CommonFileDialogResult.Ok)
                 {
