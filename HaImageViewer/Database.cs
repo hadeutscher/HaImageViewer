@@ -22,6 +22,16 @@ namespace HaImageViewer
 
         private Dictionary<string, List<string>> database;
 
+        private static string PathEscape(string x)
+        {
+            return x.Replace(",", "%COMMA%");
+        }
+
+        private static string PathUnescape(string x)
+        {
+            return x.Replace("%COMMA%", ",");
+        }
+
         public Database(string path)
         {
             this.path = path;
@@ -30,8 +40,13 @@ namespace HaImageViewer
             foreach (string line in text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries))
             {
                 var args = line.Split(new string[] { "," }, StringSplitOptions.None);
-                database[args[0]] = args.Skip(1).ToList();
+                database[PathUnescape(args[0])] = args.Skip(1).ToList();
             }
+        }
+
+        ~Database()
+        {
+            Save();
         }
 
         public List<string> GetCategories(string path)
@@ -50,7 +65,7 @@ namespace HaImageViewer
             StringBuilder sb = new StringBuilder();
             foreach (KeyValuePair<string, List<string>> entry in database)
             {
-                sb.AppendLine(entry.Value.Count > 0 ? (entry.Key + "," + entry.Value.Aggregate((x, y) => x + "," + y)) : entry.Key);
+                sb.AppendLine(entry.Value.Count > 0 ? (PathEscape(entry.Key) + "," + entry.Value.Aggregate((x, y) => x + "," + y)) : entry.Key);
             }
             File.WriteAllText(path, sb.ToString());
         }

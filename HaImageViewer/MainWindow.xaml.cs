@@ -57,6 +57,10 @@ namespace HaImageViewer
             data = new Data();
             DataContext = data;
             files = FileInfoIterator().ToList();
+            if (files.Count == 0)
+            {
+                return;
+            }
             i = 0;
             CategoriesIterator().ToList().ForEach(x => data.Categories.Add(new Category(x)));
             SetImage();
@@ -101,13 +105,19 @@ namespace HaImageViewer
             else if (IsVideo(file_name))
             {
                 var stream = new MemoryStream();
-                ffMpeg.GetVideoThumbnail(file_name, stream, 10);
-                stream.Seek(0, SeekOrigin.Begin);
-                if (stream.Length > 0)
+                try
                 {
-                    bmp.StreamSource = stream;
-                }
-                else
+                    ffMpeg.GetVideoThumbnail(file_name, stream, 10);
+                    stream.Seek(0, SeekOrigin.Begin);
+                    if (stream.Length > 0)
+                    {
+                        bmp.StreamSource = stream;
+                    }
+                    else
+                    {
+                        bmp = null;
+                    }
+                } catch (FFMpegException)
                 {
                     bmp = null;
                 }
@@ -117,7 +127,11 @@ namespace HaImageViewer
                 bmp = null;
             }
 
-            if (bmp != null)
+            if (bmp == null)
+            {
+                bmp = new BitmapImage(new Uri("pack://application:,,,/HaImageViewer;component/Resources/Empty.png"));
+            }
+            else
             {
                 bmp.EndInit();
             }
@@ -131,9 +145,21 @@ namespace HaImageViewer
             transitioning = false;
         }
 
+        private bool MatchFilter(string filter, List<string> fileCategories)
+        {
+            if (filter == "!")
+            {
+                return fileCategories.Count == 0;
+            }
+            else
+            {
+                return fileCategories.Contains(filter);
+            }
+        }
+
         private bool CategoriesMatch(List<string> fileCategories)
         {
-            return filters == null || filters.All(x => fileCategories.Contains(x));
+            return filters == null || filters.All(x => MatchFilter(x, fileCategories));
         }
 
         private DateTime GetFileTime(FileInfo fi)
@@ -253,6 +279,15 @@ namespace HaImageViewer
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Process.Start(files[i]);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (files.Count == 0)
+            {
+                Console.WriteLine("No files");
+                Close();
+            }
         }
     }
 }

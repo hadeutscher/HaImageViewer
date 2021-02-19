@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HaImageViewer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" WindowState="Maximized" KeyDown="Window_KeyDown">
+        Title="MainWindow" Height="350" Width="525" WindowState="Maximized" KeyDown="Window_KeyDown" Loaded="Window_Loaded" >
     <Window.Resources>
         <local:FileNameVisibilityConverter x:Key="FileNameVisibility" />
         <local:FileNameShortConverter x:Key="FileNameShort" />
