@@ -1,4 +1,5 @@
 ﻿using NReco.VideoConverter;
+using NReco.VideoInfo;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -39,6 +40,7 @@ namespace HaImageViewer
         private List<string> filters;
         private bool transitioning = false;
         private FFMpegConverter ffMpeg = new FFMpegConverter();
+        private FFProbe ffProbe = new FFProbe();
 
         static MainWindow()
         {
@@ -107,7 +109,9 @@ namespace HaImageViewer
                 var stream = new MemoryStream();
                 try
                 {
-                    ffMpeg.GetVideoThumbnail(file_name, stream, 10);
+                    ffProbe.IncludeStreams = false;
+                    var info = ffProbe.GetMediaInfo(file_name);
+                    ffMpeg.GetVideoThumbnail(file_name, stream, (float)info.Duration.TotalSeconds / 2);
                     stream.Seek(0, SeekOrigin.Begin);
                     if (stream.Length > 0)
                     {
@@ -118,6 +122,10 @@ namespace HaImageViewer
                         bmp = null;
                     }
                 } catch (FFMpegException)
+                {
+                    bmp = null;
+                }
+                catch (FFProbeException)
                 {
                     bmp = null;
                 }
@@ -225,7 +233,10 @@ namespace HaImageViewer
 
         private void Delete_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            File.Move(files[i], System.IO.Path.Combine(folder, "Recycle", System.IO.Path.GetFileName(files[i])));
+            var recycle = System.IO.Path.Combine(folder, "Recycle");
+            if (!Directory.Exists(recycle))
+                Directory.CreateDirectory(recycle);
+            File.Move(files[i], System.IO.Path.Combine(recycle, System.IO.Path.GetFileName(files[i])));
             files.RemoveAt(i);
             i = pmod(i, files.Count);
             SetImage();
