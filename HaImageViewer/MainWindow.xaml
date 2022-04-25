@@ -24,7 +24,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Content="{Binding CurrentFileName, Converter={StaticResource FileNameShort}}" Visibility="{Binding CurrentFileName, Converter={StaticResource FileNameVisibility}}" FontSize="30" HorizontalContentAlignment="Center" Margin="10" />
-        <MediaElement x:Name="media" Grid.Row="1" Source="{Binding CurrentFileName}" UnloadedBehavior="Manual" MediaEnded="MediaElement_MediaEnded" MouseDown="Image_MouseDown" Margin="10" />
+        <MediaElement x:Name="media" Grid.Row="1" Source="{Binding CurrentFileName}" LoadedBehavior="Manual" UnloadedBehavior="Manual" MediaEnded="MediaElement_MediaEnded" MouseDown="Image_MouseDown" Margin="10" />
         <ItemsControl Grid.Row="2" ItemsSource="{Binding Categories}" Margin="10">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>

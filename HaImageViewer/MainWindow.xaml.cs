@@ -92,6 +92,7 @@ namespace HaImageViewer
 
             string file_name = files[i];
             data.CurrentFileName = file_name;
+            media.Play();
 
             var fileCategories = Database.Get().GetCategories(file_name);
             transitioning = true;
@@ -243,6 +244,7 @@ namespace HaImageViewer
 
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            media.Pause();
             Process.Start(files[i]);
         }
 
