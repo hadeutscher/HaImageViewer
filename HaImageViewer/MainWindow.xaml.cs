@@ -1,6 +1,4 @@
-﻿using NReco.VideoConverter;
-using NReco.VideoInfo;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -39,8 +37,6 @@ namespace HaImageViewer
         private Data data;
         private List<string> filters;
         private bool transitioning = false;
-        private FFMpegConverter ffMpeg = new FFMpegConverter();
-        private FFProbe ffProbe = new FFProbe();
 
         static MainWindow()
         {
@@ -97,53 +93,6 @@ namespace HaImageViewer
             string file_name = files[i];
             data.CurrentFileName = file_name;
 
-            var bmp = new BitmapImage();
-            bmp.BeginInit();
-            bmp.CacheOption = BitmapCacheOption.OnLoad;
-            if (IsImage(file_name))
-            {
-                bmp.UriSource = new Uri(file_name);
-            }
-            else if (IsVideo(file_name))
-            {
-                var stream = new MemoryStream();
-                try
-                {
-                    ffProbe.IncludeStreams = false;
-                    var info = ffProbe.GetMediaInfo(file_name);
-                    ffMpeg.GetVideoThumbnail(file_name, stream, (float)info.Duration.TotalSeconds / 2);
-                    stream.Seek(0, SeekOrigin.Begin);
-                    if (stream.Length > 0)
-                    {
-                        bmp.StreamSource = stream;
-                    }
-                    else
-                    {
-                        bmp = null;
-                    }
-                } catch (FFMpegException)
-                {
-                    bmp = null;
-                }
-                catch (FFProbeException)
-                {
-                    bmp = null;
-                }
-            }
-            else
-            {
-                bmp = null;
-            }
-
-            if (bmp == null)
-            {
-                bmp = new BitmapImage(new Uri("pack://application:,,,/HaImageViewer;component/Resources/Empty.png"));
-            }
-            else
-            {
-                bmp.EndInit();
-            }
-            data.CurrentImage = bmp;
             var fileCategories = Database.Get().GetCategories(file_name);
             transitioning = true;
             foreach (Category cat in data.Categories)

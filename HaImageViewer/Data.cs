@@ -17,13 +17,6 @@ namespace HaImageViewer
             get { return categories ?? (categories = new ObservableCollection<Category>()); }
         }
 
-        private ImageSource currentImage;
-        public ImageSource CurrentImage
-        {
-            get { return currentImage ?? (currentImage = new BitmapImage()); }
-            set { SetField(ref currentImage, value); }
-        }
-
         private string currentFileName;
         public string CurrentFileName
         {
