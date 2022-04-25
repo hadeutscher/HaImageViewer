@@ -101,6 +101,11 @@ namespace HaImageViewer
             }
             transitioning = false;
         }
+                private void MediaElement_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            media.Position = new TimeSpan(0, 0, 1);
+            media.Play();
+        }
 
         private bool MatchFilter(string filter, List<string> fileCategories)
         {
