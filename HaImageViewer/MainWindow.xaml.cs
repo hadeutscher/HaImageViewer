@@ -92,7 +92,7 @@ namespace HaImageViewer
 
             string file_name = files[i];
             data.CurrentFileName = file_name;
-            media.Play();
+            media.Stop();
 
             var fileCategories = Database.Get().GetCategories(file_name);
             transitioning = true;
@@ -102,7 +102,15 @@ namespace HaImageViewer
             }
             transitioning = false;
         }
-                private void MediaElement_MediaEnded(object sender, RoutedEventArgs e)
+        private void MediaElement_MediaOpened(object sender, EventArgs e)
+        {
+            if (IsVideo(data.CurrentFileName))
+                media.Position = new TimeSpan(0, 0, 0, 0, (int)media.NaturalDuration.TimeSpan.TotalMilliseconds / 2);
+
+            media.Play();
+        }
+
+        private void MediaElement_MediaEnded(object sender, RoutedEventArgs e)
         {
             media.Position = new TimeSpan(0, 0, 1);
             media.Play();
