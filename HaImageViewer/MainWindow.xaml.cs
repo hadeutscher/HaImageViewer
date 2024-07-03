@@ -122,6 +122,10 @@ namespace HaImageViewer
             {
                 return fileCategories.Count == 0;
             }
+            else if (filter.StartsWith("!"))
+            {
+                return !fileCategories.Contains(filter.TrimStart('!'));
+            }
             else
             {
                 return fileCategories.Contains(filter);
