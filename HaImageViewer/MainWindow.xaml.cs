@@ -203,10 +203,11 @@ namespace HaImageViewer
             var recycle = System.IO.Path.Combine(folder, "Recycle");
             if (!Directory.Exists(recycle))
                 Directory.CreateDirectory(recycle);
-            File.Move(files[i], System.IO.Path.Combine(recycle, System.IO.Path.GetFileName(files[i])));
+            var to_remove = files[i];
             files.RemoveAt(i);
             i = pmod(i, files.Count);
             SetImage();
+            Task.Run(() => { File.Move(to_remove, System.IO.Path.Combine(recycle, System.IO.Path.GetFileName(to_remove))); });
         }
 
         private void TryToggleCategory(int index)
