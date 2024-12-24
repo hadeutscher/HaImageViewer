@@ -26,6 +26,10 @@ namespace HaImageViewer
             {
                 new MainWindow(args[1], args.Skip(2).ToList()).ShowDialog();
             }
+            else if (args.Length == 2 && args[1] == "delete-missing")
+            {
+                Database.Get().DeleteMissing();
+            }
             else if (args.Length == 2)
             {
                 new MainWindow(args[1]).ShowDialog();

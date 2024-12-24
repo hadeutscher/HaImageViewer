@@ -69,5 +69,21 @@ namespace HaImageViewer
             }
             File.WriteAllText(path, sb.ToString());
         }
+
+        public void DeleteMissing()
+        {
+            List<string> keysToRemove = new List<string>();
+            foreach (var key in database.Keys)
+            {
+                if (!File.Exists(key))
+                {
+                    keysToRemove.Add(key);
+                }
+            }
+            foreach (var key in keysToRemove)
+            {
+                database.Remove(key);
+            }
+        }
     }
 }
