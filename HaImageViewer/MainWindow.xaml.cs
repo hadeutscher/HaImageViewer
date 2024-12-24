@@ -222,33 +222,43 @@ namespace HaImageViewer
             switch (e.Key)
             {
                 case Key.NumPad1:
+                case Key.D1:
                     TryToggleCategory(0);
                     break;
                 case Key.NumPad2:
+                case Key.D2:
                     TryToggleCategory(1);
                     break;
                 case Key.NumPad3:
+                case Key.D3:
                     TryToggleCategory(2);
                     break;
                 case Key.NumPad4:
+                case Key.D4:
                     TryToggleCategory(3);
                     break;
                 case Key.NumPad5:
+                case Key.D5:
                     TryToggleCategory(4);
                     break;
                 case Key.NumPad6:
+                case Key.D6:
                     TryToggleCategory(5);
                     break;
                 case Key.NumPad7:
+                case Key.D7:
                     TryToggleCategory(6);
                     break;
                 case Key.NumPad8:
+                case Key.D8:
                     TryToggleCategory(7);
                     break;
                 case Key.NumPad9:
+                case Key.D9:
                     TryToggleCategory(8);
                     break;
                 case Key.NumPad0:
+                case Key.D0:
                     TryToggleCategory(9);
                     break;
             }
