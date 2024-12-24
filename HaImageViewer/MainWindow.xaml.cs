@@ -59,7 +59,7 @@ namespace HaImageViewer
             {
                 return;
             }
-            i = 0;
+            i = files.Count - 1;
             CategoriesIterator().ToList().ForEach(x => data.Categories.Add(new Category(x)));
             SetImage();
         }
