@@ -23,5 +23,12 @@ namespace HaImageViewer
             get { return currentFileName ?? (currentFileName = ""); }
             set { SetField(ref currentFileName, value); }
         }
+
+        private bool categoriesVisible = true;
+        public bool CategoriesVisible
+        {
+            get { return categoriesVisible; }
+            set { SetField(ref categoriesVisible, value); }
+        }
     }
 }

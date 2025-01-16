@@ -29,6 +29,7 @@ namespace HaImageViewer
         public static RoutedCommand MoveNextBig = new RoutedCommand();
         public static RoutedCommand MovePrevBig = new RoutedCommand();
         public static RoutedCommand Delete = new RoutedCommand();
+        public static RoutedCommand HideCategories = new RoutedCommand();
 
         private static string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
         private static string[] videoExtensions = { ".mp4", ".webm", ".wmv", ".m4v", ".flv", ".avi" };
@@ -55,6 +56,7 @@ namespace HaImageViewer
             MovePrevBig.InputGestures.Add(new KeyGesture(Key.Left, ModifierKeys.Control));
             MoveNextBig.InputGestures.Add(new KeyGesture(Key.Right, ModifierKeys.Control));
             Delete.InputGestures.Add(new KeyGesture(Key.Delete));
+            HideCategories.InputGestures.Add(new KeyGesture(Key.H, ModifierKeys.Control));
         }
 
         public static bool IsDarkMode { get { return ShouldAppsUseDarkMode() == 1; } }
@@ -299,6 +301,11 @@ namespace HaImageViewer
                 Console.WriteLine("No files");
                 Close();
             }
+        }
+
+        private void HideCategories_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            data.CategoriesVisible = !data.CategoriesVisible;
         }
     }
 }
