@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -38,6 +40,14 @@ namespace HaImageViewer
         private List<string> filters;
         private bool transitioning = false;
 
+        [DllImport("uxtheme.dll", SetLastError = true, EntryPoint = "#132")]
+        private static extern int ShouldAppsUseDarkMode();
+
+        [DllImport("dwmapi.dll", PreserveSig = false)]
+        public static extern void DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+
+        const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+
         static MainWindow()
         {
             MovePrev.InputGestures.Add(new KeyGesture(Key.Left));
@@ -47,11 +57,14 @@ namespace HaImageViewer
             Delete.InputGestures.Add(new KeyGesture(Key.Delete));
         }
 
+        public static bool IsDarkMode { get { return ShouldAppsUseDarkMode() == 1; } }
+
         public MainWindow(string folder, List<string> filters = null)
         {
             this.folder = folder;
             this.filters = filters;
             InitializeComponent();
+            SetTheme();
             data = new Data();
             DataContext = data;
             files = FileInfoIterator().ToList();
@@ -62,6 +75,14 @@ namespace HaImageViewer
             i = files.Count - 1;
             CategoriesIterator().ToList().ForEach(x => data.Categories.Add(new Category(x)));
             SetImage();
+        }
+
+        private void SetTheme()
+        {
+            var windowHandle = new WindowInteropHelper(this).EnsureHandle();
+
+            int useDarkMode = IsDarkMode ? 1 : 0;
+            DwmSetWindowAttribute(windowHandle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref useDarkMode, sizeof(int));
         }
 
         private DateTime lastSave = DateTime.Now;

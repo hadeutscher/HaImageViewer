@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HaImageViewer"
         mc:Ignorable="d"
+        Style ="{StaticResource WindowBaseStyle}"
         Title="MainWindow" Height="350" Width="525" WindowState="Maximized" KeyDown="Window_KeyDown" Loaded="Window_Loaded" >
     <Window.Resources>
         <local:FileNameVisibilityConverter x:Key="FileNameVisibility" />
@@ -28,7 +29,7 @@
         <ItemsControl Grid.Row="2" ItemsSource="{Binding Categories}" Margin="10">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <ToggleButton Content="{Binding Name}" Width="100" Height="70" Margin="5,0,5,0" FontSize="20" IsChecked="{Binding Selected}" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
+                    <ToggleButton Content="{Binding Name}" Style="{StaticResource ButtonBaseStyle}" Width="100" Height="70" Margin="5,0,5,0" FontSize="20" IsChecked="{Binding Selected}" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>
