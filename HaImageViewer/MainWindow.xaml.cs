@@ -31,8 +31,8 @@ namespace HaImageViewer
         public static RoutedCommand Delete = new RoutedCommand();
         public static RoutedCommand HideCategories = new RoutedCommand();
 
-        private static string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
-        private static string[] videoExtensions = { ".mp4", ".webm", ".wmv", ".m4v", ".flv", ".avi" };
+        private static string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".jfif", ".webp" };
+        private static string[] videoExtensions = { ".mp4", ".webm", ".wmv", ".m4v", ".flv", ".avi", ".mov", ".mpg" };
 
         private string folder;
         private IList<string> files;
