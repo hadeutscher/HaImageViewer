@@ -307,5 +307,10 @@ namespace HaImageViewer
         {
             data.CategoriesVisible = !data.CategoriesVisible;
         }
+
+        private void media_MediaFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+
+        }
     }
 }
